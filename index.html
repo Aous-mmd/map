@@ -1,102 +1,263 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+  <title>Map at a specified location</title>
+  <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/bootstrap-select.min.css">
+  <link rel="stylesheet" type="text/css" href="css/styles.css" />
+  <script type="text/javascript" src='../test-credentials.js'></script>
+  <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+  <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+  <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+  <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+  <script type="text/javascript">window.ENV_VARIABLE = 'https://developer.here.com'</script>
+  <script src='https://developer.here.com/javascript/src/iframeheight.js'></script>
+</head>
+
+<body id="markers-on-the-map">
+  <div style="width: 100%; height: 100vh" id="map"></div>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/bootstrap-select.min.js"></script>
+  <script>
+    /*function addMarkersToMap(map) {
+        var parisMarker = new H.map.Marker({lat:34.7310000, lng:36.6870414});
+        map.addObject(parisMarker);
     
-    <title>Map at a specified location</title>
-    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
-    <link rel="stylesheet" type="text/css" href="demo.css" />
-    <link rel="stylesheet" type="text/css" href="styles.css" />
-    <link rel="stylesheet" type="text/css" href="../template.css" />
-    <script type="text/javascript" src='../test-credentials.js'></script>    
-    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
-    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
-    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
-    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
-  <script type="text/javascript" >window.ENV_VARIABLE = 'https://developer.here.com'</script><script src='https://developer.here.com/javascript/src/iframeheight.js'></script></head>
-  <body id="markers-on-the-map">
-    <div  style="width: 100%; height: 100vh" id="map"></div>
-    <script>
-/*function addMarkersToMap(map) {
-    var parisMarker = new H.map.Marker({lat:34.7310000, lng:36.6870414});
-    map.addObject(parisMarker);
+        var romeMarker = new H.map.Marker({lat:34.7510000, lng:36.6870414});
+        map.addObject(romeMarker);
+    
+        var berlinMarker = new H.map.Marker({lat:34.7310000, lng:36.6070414});
+        map.addObject(berlinMarker);
+    
+        var madridMarker = new H.map.Marker({lat:34.7910000, lng:36.6270414});
+        map.addObject(madridMarker);
+    
+        var londonMarker = new H.map.Marker({lat:34.7500000, lng:36.6500414});
+        map.addObject(londonMarker);
+    }*/
+    // function addMarkerToGroup(group, coordinate, html) {
+    //   var marker = new H.map.Marker(coordinate);
+    //   // add custom data to the marker
+    //   marker.setData(html);
+    //   group.addObject(marker);
+    // }
+    // function addInfoBubble(map) {
+    //   var group = new H.map.Group();
+    //   map.addObject(group);
+    //   // add 'tap' event listener, that opens info bubble, to the group
+    //   group.addEventListener('tap', function (evt) {
+    //     // event target is the marker itself, group is a parent event target
+    //     // for all objects that it contains
+    //     var bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
+    //       // read custom data
+    //       content: evt.target.getData()
+    //     });
+    //     // show info bubble
+    //     ui.addBubble(bubble);
+    //   }, false);
+    //   addMarkerToGroup(group, { lat: 34.7304187, lng: 36.6970414 },
+    //     '<div><a href="http://www.mcfc.co.uk" target="_blank">Manchester City</a>' +
+    //     '</div><div >City of Manchester Stadium<br>Capacity: 48,000</div>');
+    //   addMarkerToGroup(group, { lat: 34.7304187, lng: 36.6170414 },
+    //     '<div><a href="http://www.liverpoolfc.tv" target="_blank">Liverpool</a>' +
+    //     '</div><div >Anfield<br>Capacity: 45,362</div>');
+    // }
+    let i = 0;
+    function addDomMarker(map) {
+      var outerElement = document.createElement('div'),
+        innerElement = document.createElement('div');
+      // outerElement.style.backgroundImag = "url('iconfinder_map-marker_299087.png')";
+      // outerElement.style.webkitUserSelect = 'none';
+      // outerElement.style.msUserSelect = 'none';
+      // outerElement.style.mozUserSelect = 'none';
+      // outerElement.style.cursor = 'default';
+      // innerElement.style.color = 'red';
+      // innerElement.style.backgroundColor = 'blue';
+      // innerElement.style.border = '2px solid black';
+      // innerElement.style.font = 'normal 12px arial';
+      // innerElement.style.lineHeight = '12px'
+      // innerElement.style.paddingTop = '2px';
+      // innerElement.style.paddingLeft = '4px';
+      // innerElement.style.width = '20px';
+      // innerElement.style.height = '20px';
+      // innerElement.style.marginTop = '-10px';
+      // innerElement.style.marginLeft = '-10px';
+      outerElement.appendChild(innerElement);
+      innerElement.innerHTML = "<img src=\'iconfinder_map-marker_299087.png\' width=\'40px\' height=\'40px\'>";
+      function changeOpacity(evt) {
+        evt.target.style.opacity = 0.6;
+      };
+      function changeOpacityToOne(evt) {
+        evt.target.style.opacity = 1;
+      };
+      var domIcon = new H.map.DomIcon(outerElement, {
+        onAttach: function (clonedElement, domIcon, domMarker) {
+          clonedElement.addEventListener('mouseover', changeOpacity);
+          clonedElement.addEventListener('mouseout', changeOpacityToOne);
+        },
+        onDetach: function (clonedElement, domIcon, domMarker) {
+          clonedElement.removeEventListener('mouseover', changeOpacity);
+          clonedElement.removeEventListener('mouseout', changeOpacityToOne);
+        }
+      });
+      let i = 0;
+      var bearsMarker = new H.map.DomMarker({ lat: 34.7304187, lng: 36.6770414 }, {
+        icon: domIcon
+      });
+      map.addObject(bearsMarker);
+    }
+    function geocode(platform) {
+      var geocoder = platform.getGeocodingService(),
+        geocodingParameters = {
+          housenumber: '425',
+          street: 'randolph',
+          city: 'chicago',
+          country: 'usa',
+          jsonattributes: 1
+        };
 
-    var romeMarker = new H.map.Marker({lat:34.7510000, lng:36.6870414});
-    map.addObject(romeMarker);
-
-    var berlinMarker = new H.map.Marker({lat:34.7310000, lng:36.6070414});
-    map.addObject(berlinMarker);
-
-    var madridMarker = new H.map.Marker({lat:34.7910000, lng:36.6270414});
-    map.addObject(madridMarker);
-
-    var londonMarker = new H.map.Marker({lat:34.7500000, lng:36.6500414});
-    map.addObject(londonMarker);
-}*/
-function addMarkerToGroup(group, coordinate, html) {
-  var marker = new H.map.Marker(coordinate);
-  // add custom data to the marker
-  marker.setData(html);
-  group.addObject(marker);
-}
-function addInfoBubble(map) {
-  var group = new H.map.Group();
-
-  map.addObject(group);
-
-  // add 'tap' event listener, that opens info bubble, to the group
-  group.addEventListener('tap', function (evt) {
-    // event target is the marker itself, group is a parent event target
-    // for all objects that it contains
-    var bubble =  new H.ui.InfoBubble(evt.target.getGeometry(), {
-      // read custom data
-      content: evt.target.getData()
+      geocoder.geocode(
+        geocodingParameters,
+        onSuccess,
+        onError
+      );
+    }
+    function onSuccess(result) {
+      var locations = result.response.view[0].result;
+      /*
+       * The styling of the geocoding response on the map is entirely under the developer's control.
+       * A representitive styling can be found the full JS + HTML code of this example
+       * in the functions below:
+       */
+      addLocationsToMap(locations);
+      addLocationsToPanel(locations);
+      // ... etc.
+    }
+    function onError(error) {
+      alert('Can\'t reach the remote server');
+    }
+    var platform = new H.service.Platform({
+      apikey: 'WscOFM_Fc4h8NFT8KBM35tHBC5m8AXYpn6KC7w6jb1s'
     });
-    // show info bubble
-    ui.addBubble(bubble);
-  }, false);
+    var defaultLayers = platform.createDefaultLayers();
+    var map = new H.Map(document.getElementById('map'),
+      defaultLayers.vector.normal.map, {
+      center: { lat: 34.7304187, lng: 36.6770414 },
+      zoom: 13,
+      pixelRatio: window.devicePixelRatio || 1
+    });
+    window.addEventListener('resize', () => map.getViewPort().resize());
+    var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
 
-  addMarkerToGroup(group, {lat:34.7304187, lng:36.6970414},
-    '<div><a href="http://www.mcfc.co.uk" target="_blank">Manchester City</a>' +
-    '</div><div >City of Manchester Stadium<br>Capacity: 48,000</div>');
+    // Create the default UI components
+    var ui = H.ui.UI.createDefault(map, defaultLayers);
+    // Now use the map as required...
+    /*window.onload = function () {
+      addMarkersToMap(map);
+    }*/
+    var bubble;
+    function openBubble(position, text) {
+      if (!bubble) {
+        bubble = new H.ui.InfoBubble(
+          position,
+          { content: text });
+        ui.addBubble(bubble);
+      } else {
+        bubble.setPosition(position);
+        bubble.setContent(text);
+        bubble.open();
+      }
+    }
 
-  addMarkerToGroup(group, {lat:34.7304187, lng:36.6170414},
-    '<div><a href="http://www.liverpoolfc.tv" target="_blank">Liverpool</a>' +
-    '</div><div >Anfield<br>Capacity: 45,362</div>');
+    /**
+     * Creates a series of list items for each location found, and adds it to the panel.
+     * @param {Object[]} locations An array of locations as received from the
+     *                             H.service.GeocodingService
+     */
+    function addLocationsToPanel(locations) {
 
-}
+      var nodeOL = document.createElement('ul'),
+        i;
 
-var platform = new H.service.Platform({
-  apikey: 'WscOFM_Fc4h8NFT8KBM35tHBC5m8AXYpn6KC7w6jb1s'
-});
-var defaultLayers = platform.createDefaultLayers();
+      nodeOL.style.fontSize = 'small';
+      nodeOL.style.marginLeft = '5%';
+      nodeOL.style.marginRight = '5%';
 
-//Step 2: initialize a map - this map is centered over Europe
-var map = new H.Map(document.getElementById('map'),
-  defaultLayers.raster.satellite.map,{
-  center: {lat:34.7304187, lng:36.6770414},
-  zoom: 13,
-  pixelRatio: window.devicePixelRatio || 1
-});
 
-// add a resize listener to make sure that the map occupies the whole container
-window.addEventListener('resize', () => map.getViewPort().resize());
+      for (i = 0; i < locations.length; i += 1) {
+        var li = document.createElement('li'),
+          divLabel = document.createElement('div'),
+          address = locations[i].location.address,
+          content = '<strong style="font-size: large;">' + address.label + '</strong></br>';
+        position = {
+          lat: locations[i].location.displayPosition.latitude,
+          lng: locations[i].location.displayPosition.longitude
+        };
 
-//Step 3: make the map interactive
-// MapEvents enables the event system
-// Behavior implements default interactions for pan/zoom (also on mobile touch environments)
-var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+        content += '<strong>houseNumber:</strong> ' + address.houseNumber + '<br/>';
+        content += '<strong>street:</strong> ' + address.street + '<br/>';
+        content += '<strong>district:</strong> ' + address.district + '<br/>';
+        content += '<strong>city:</strong> ' + address.city + '<br/>';
+        content += '<strong>postalCode:</strong> ' + address.postalCode + '<br/>';
+        content += '<strong>county:</strong> ' + address.county + '<br/>';
+        content += '<strong>country:</strong> ' + address.country + '<br/>';
+        content += '<br/><strong>position:</strong> ' +
+          Math.abs(position.lat.toFixed(4)) + ((position.lat > 0) ? 'N' : 'S') +
+          ' ' + Math.abs(position.lng.toFixed(4)) + ((position.lng > 0) ? 'E' : 'W');
 
-// Create the default UI components
-var ui = H.ui.UI.createDefault(map, defaultLayers);
-// Now use the map as required...
-/*window.onload = function () {
-  addMarkersToMap(map);
-}*/
-addInfoBubble(map);
-</script>
-  </body>
+        divLabel.innerHTML = content;
+        li.appendChild(divLabel);
+
+        nodeOL.appendChild(li);
+      }
+
+      locationsContainer.appendChild(nodeOL);
+    }
+
+
+    /**
+     * Creates a series of H.map.Markers for each location found, and adds it to the map.
+     * @param {Object[]} locations An array of locations as received from the
+     *                             H.service.GeocodingService
+     */
+    function addLocationsToMap(locations) {
+      var group = new H.map.Group(),
+        position,
+        i;
+
+      // Add a marker for each location found
+      for (i = 0; i < locations.length; i += 1) {
+        position = {
+          lat: locations[i].location.displayPosition.latitude,
+          lng: locations[i].location.displayPosition.longitude
+        };
+        marker = new H.map.Marker(position);
+        marker.label = locations[i].location.address.label;
+        group.addObject(marker);
+      }
+
+      group.addEventListener('tap', function (evt) {
+        map.setCenter(evt.target.getGeometry());
+        openBubble(
+          evt.target.getGeometry(), evt.target.label);
+      }, false);
+
+      // Add the locations group to the map
+      map.addObject(group);
+      map.getViewModel().setLookAtData({
+        bounds: group.getBoundingBox()
+      });
+    }
+    // Now use the map as required...
+    geocode(platform);
+    addDomMarker(map);
+
+  </script>
+</body>
+
 </html>
-
-
